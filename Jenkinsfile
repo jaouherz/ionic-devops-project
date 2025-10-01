@@ -4,16 +4,24 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'git@github.com:jaouherz/ionic-devops-project.git'
+                git branch: 'main', url: 'https://github.com/jaouherz/ionic-devops-project.git'
             }
         }
-        stage('Build Ionic') {
+
+        stage('Build Ionic App') {
             steps {
-                sh 'npm install -g @ionic/cli'
-                sh 'npm install'
-                sh 'ionic build --prod'
+                script {
+                    docker.image('node:20-alpine').inside {
+                        sh '''
+                        npm install -g @ionic/cli
+                        npm install
+                        ionic build --prod
+                        '''
+                    }
+                }
             }
         }
+
         stage('Build Docker Image') {
             steps {
                 script {
@@ -25,11 +33,7 @@ pipeline {
         stage('Deploy Container') {
             steps {
                 script {
-                    // Stop old container if running
-                    sh "docker stop ionic-app || true"
-                    sh "docker rm ionic-app || true"
-
-                    // Run new container on port 80
+                    sh "docker stop ionic-app || true && docker rm ionic-app || true"
                     sh "docker run -d -p 80:80 --name ionic-app ionic-app:latest"
                 }
             }
