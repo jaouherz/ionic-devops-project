@@ -3,10 +3,12 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'git@github.com:jaouherz/ionic-devops-project.git'
-            }
-        }
+                    steps {
+                        git branch: 'main',
+                            url: 'https://github.com/jaouherz/ionic-devops-project.git',
+                            credentialsId: 'github-pat'
+                    }
+                }
 
         stage('Build Docker Image') {
             steps {
