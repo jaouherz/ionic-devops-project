@@ -1,14 +1,14 @@
-FROM node:20-alpine AS build
-
+# Stage 1: Build Ionic app
+FROM node:18-alpine as builder
 WORKDIR /app
-
 COPY package*.json ./
+RUN npm install -g @ionic/cli
 RUN npm install
 COPY . .
-RUN npx ionic build --prod
+RUN ionic build --prod
 
-# Stage 2: serve with nginx
+# Stage 2: Serve with nginx
 FROM nginx:alpine
-COPY --from=build /app/www /usr/share/nginx/html
+COPY --from=builder /app/www /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
