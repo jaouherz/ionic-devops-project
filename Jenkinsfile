@@ -7,7 +7,13 @@ pipeline {
                 git branch: 'main', url: 'git@github.com:jaouherz/ionic-devops-project.git'
             }
         }
-
+        stage('Build Ionic') {
+            steps {
+                sh 'npm install -g @ionic/cli'
+                sh 'npm install'
+                sh 'ionic build --prod'
+            }
+        }
         stage('Build Docker Image') {
             steps {
                 script {
