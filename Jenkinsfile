@@ -3,12 +3,16 @@ pipeline {
 
     stages {
         stage('Checkout') {
-                    steps {
-                        git branch: 'main',
-                            url: 'https://github.com/jaouherz/ionic-devops-project.git',
-                            credentialsId: 'github-pat'
-                    }
-                }
+            steps {
+                checkout([$class: 'GitSCM',
+                    branches: [[name: 'main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/jaouherz/ionic-devops-project.git',
+                        credentialsId: 'github-pat'
+                    ]]
+                ])
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
