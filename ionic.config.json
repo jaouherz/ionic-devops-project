@@ -1,0 +1,7 @@
+{
+  "name": "anguonic",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
